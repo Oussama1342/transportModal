@@ -10,7 +10,17 @@ class ClientService {
         allClient(){
             return axios.get("http://localhost:8080/auth/allclient")
         }
+           
 
+        getcodeClien(codeclt){
+            return axios.get("http://localhost:8080/auth/ficndcode" + "/" +codeclt)
+        }
+
+
+        getallBureau(){
+            return axios.get("http://localhost:8080/auth/allbureau")
+
+        }
         updateClient(idclient){
 
             return  axios.put("localhost:8080/auth/editclient" + "/" + idclient , {

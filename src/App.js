@@ -25,7 +25,7 @@ import client from './pages/Client'
  import ClientList from './pages/Client/ClientList'
 import ClientEdit from './pages/Client/ClientEdit'
 import BourdorLivraison from './pages/BourdorLivraison'
-import test from './pages/Dashboardm'
+import test from './pages/test'
 
 import ColisListdash from './pages/colisListDash'
 function App() {

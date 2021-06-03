@@ -5,9 +5,11 @@ import {
 import React, { Component } from 'react';
 import livraisonService from '../services/LivraisonService'
 import couliService from '../services/CouliService'
-import Modal from './Modal.js';
-
+import Modal from 'react-modal';
+import ClientService from '../services/ClientService'
+import './Dashboard2.css'
 export class Dashboard2 extends Component {  
+
 
 
   constructor(props) {
@@ -31,8 +33,10 @@ export class Dashboard2 extends Component {
       montant : '',
       codeClient : 0 ,
       show : false ,
-      message : null
-    
+      message : null,
+      clients: [],
+      codevalue: 0 ,
+      bureaux :[]
       
 
     }
@@ -42,7 +46,14 @@ export class Dashboard2 extends Component {
 }
 
 
-changestate(){
+componentDidMount(){
+  ClientService.allClient().then((res) => {
+      this.setState({ clients: res.data});
+  });
+  ClientService.getallBureau().then((res)=>{
+       this.setState({bureaux : res.data})
+
+  })
 }
 saveCoulis =(e) =>{
   e.preventDefault();
@@ -70,12 +81,63 @@ showModal = () => {
 hideModal = () => {
   this.setState({ show: false });
 };
+testget(idclt){
+ return ClientService.getcodeClien(idclt).then(res=>{
+   this.setState({codevalue : res.data})
+   console.log(res)
+ }
 
+ )
+
+}
     render() {  
         return (  
        <div className="content-wrapper">
-         <Modal show={this.state.show} handleClose={this.hideModal}>
-          <p>Modal</p>
+          <Modal  className="modal-wrapper"  isOpen={this.state.show} handleClose={this.hideModal} style={{width:"20%"}}>
+         
+       
+
+           <div className="modal-header">
+             <p>Liste de client</p>
+           </div>
+           <div className="modal-body">
+             <p>References de clients</p>
+             <table className = "table table-striped table-bordered">
+
+<thead>
+<tr >
+ 
+        <th> Réference</th>
+        <th> Nom/prenom</th>
+        <th> Marticul fiscal</th>
+
+        <th></th>
+    
+   
+    </tr>
+</thead>
+<tbody>
+    {
+        this.state.clients.map(
+            client => 
+            <tr key = {client.codeClient}>
+
+   <td>{client.codeClient} </td>
+   <td>{client.nomPrenpm} </td>
+   <td>{client.matriculFiscale} </td>
+   <td><button type="button" class="btn btn-info" onClick={() => this.testget(client.codeClient)}>Ajouter</button>
+</td>
+    </tr>
+         ) } </tbody></table>
+
+         <br></br>
+         <button type="button" class="btn btn-dark" style={{marginLeft:"40%"}} onClick={() => this.setState({ show: false })}>Fermer</button>
+
+           </div>
+
+
+
+
         </Modal>
   {/* Content Header (Page header) */}
   <div className="content-header">
@@ -117,7 +179,7 @@ hideModal = () => {
   <div className="col">
   <p className="form-label" htmlFor="form1Example1" >Réference</p>
 
-    <input type="text" id="form1Example1" className="form-control" name="refCoulis" style={{ width: "150px"}} onChange={this.onChange} />
+    <input type="text" id="form1Example1" className="form-control"  name="refCoulis" style={{ width: "150px"}} onChange={this.onChange} />
   </div>
   <div className="col">
   </div>
@@ -151,14 +213,14 @@ hideModal = () => {
         </div>
      
         <div className="col">
-        <input type="text" id="form1Example1" className="form-control" name="codeClient" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
+        <input type="text" id="form1Example1" className="form-control" value={this.state.codevalue} name="codeClient" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
         <input type="text" id="form1Example1" className="form-control" name="refCoulis" style={{ width: "80px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
         <input type="text" id="form1Example1" className="form-control" name="nonEmeteur"  style={{ width: "80px"} ,{ height: "30px"}} onChange={this.onChange} />
 
 
         </div>
         <div className="col">
-        <button type="button" class="btn btn-dark" onClick={this.showModal}>parcourir</button>
+        <button type="button" class="btn btn-dark" onClick={() => this.setState({ show: true })}>parcourir</button>
        </div>
      </div>   
 
@@ -194,7 +256,7 @@ hideModal = () => {
              <input type="text" id="form1Example1" className="form-control" name="refCoulis" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
 
              <select name="modePayement"  className="form-control" >
-   <option defaultChecked  >Sousse</option>  
+   <option defaultChecked  >{this.state.bureaux}</option>  
    <option ></option> 
    <option  > </option> </select>
         </div>
