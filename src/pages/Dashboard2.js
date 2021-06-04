@@ -31,11 +31,13 @@ export class Dashboard2 extends Component {
       remboursement : '',
       montantRemboursement :'',
       montant : '',
-      codeClient : 0 ,
       show : false ,
       message : null,
       clients: [],
       codevalue: 0 ,
+      codeClientexped : 0,
+      numtelRecepteur : 0 ,
+      codeClientdest  : 0,
       bureaux :[]
       
 
@@ -57,8 +59,8 @@ componentDidMount(){
 }
 saveCoulis =(e) =>{
   e.preventDefault();
-  let coulis  = {refCoulis : this.state.refCoulis, nonEmeteur : this.state.nonEmeteur , addressEmeteur : this.state.addressEmeteur, numtelEmeteur : this.state.numtelEmeteur , nonRecepteur : this.state.nonRecepteur , 
-    addressRecepteur : this.state.addressRecepteur,codeClient :this.state.codeClient , bureau : this.state.bureau,addressRecepteur : this.state.addressRecepteur, modePayement : this.state.modePayement, remboursement : this.state.remboursement ,montantRemboursement: this.state.montantRemboursement, montant : this.state.montant
+  let coulis  = {refCoulis : this.state.refCoulis, nonEmeteur : this.state.nonEmeteur ,  numtelEmeteur : this.state.numtelEmeteur , nonRecepteur : this.state.nonRecepteur , numtelRecepteur : this.state.numtelRecepteur,
+    codeClientexped :this.state.codeClientexped , bureau : this.state.bureau, modePayement : this.state.modePayement, remboursement : this.state.remboursement ,montantRemboursement: this.state.montantRemboursement, montant : this.state.montant ,codeClientdest :this.state.codeClientdest
     } ; 
     couliService.addCoulis(coulis).then(res => {
       this.setState({message : "coulis added with Seccesful"});
@@ -179,9 +181,13 @@ testget(idclt){
   <div className="col">
   <p className="form-label" htmlFor="form1Example1" >Réference</p>
 
-    <input type="text" id="form1Example1" className="form-control"  name="refCoulis" style={{ width: "150px"}} onChange={this.onChange} />
   </div>
   <div className="col">
+  <input type="text" id="form1Example1" className="form-control"  name="refCoulis" style={{ width: "150px"}} onChange={this.onChange} />
+
+  </div>
+  <div className="col">
+
   </div>
   </div>
   {/* Password input */}
@@ -192,14 +198,14 @@ testget(idclt){
      <div className="form-row mb-4">
      <div className="col"> 
      <div >
-        <input className="form-check-input"  type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-        <label className="form-check-label" htmlFor="flexRadioDefault1">
+        <input   type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+        <label  >
           Client fidel
         </label>
       </div> <br></br><br></br>
       <div >
-        <input className="form-check-input"  type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-        <label className="form-check-label" htmlFor="flexRadioDefault1">
+        <input   type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+        <label >
           <p>Client passagé</p> 
         </label>
       </div>
@@ -213,9 +219,9 @@ testget(idclt){
         </div>
      
         <div className="col">
-        <input type="text" id="form1Example1" className="form-control" value={this.state.codevalue} name="codeClient" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
-        <input type="text" id="form1Example1" className="form-control" name="refCoulis" style={{ width: "80px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
-        <input type="text" id="form1Example1" className="form-control" name="nonEmeteur"  style={{ width: "80px"} ,{ height: "30px"}} onChange={this.onChange} />
+        <input type="text" id="form1Example1" className="form-control" value={this.state.codeClientexped} name="codeClient" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
+        <input type="text" id="form1Example1" className="form-control" name="nonEmeteur" style={{ width: "80px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
+        <input type="text" id="form1Example1" className="form-control" name="numtelEmeteur"  style={{ width: "80px"} ,{ height: "30px"}} onChange={this.onChange} />
 
 
         </div>
@@ -249,25 +255,45 @@ testget(idclt){
       </div>
      </div>
      <div className="col">
-     <div className="form-row mb-4">
-     <div className="col">
-     <input type="text" id="form1Example1" className="form-control" name="refCoulis" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} />
+  
+ 
+     <input type="text" id="form1Example1" className="form-control" name="nonRecepteur " style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} />
       <br></br>
-             <input type="text" id="form1Example1" className="form-control" name="refCoulis" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
+             <input type="text" id="form1Example1" className="form-control" name="numtelRecepteur" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
 
-             <select name="modePayement"  className="form-control" >
+             <select name="bureau"  className="form-control" >
    <option defaultChecked  >{this.state.bureaux}</option>  
    <option ></option> 
    <option  > </option> </select>
-        </div>
      
-        <div className="col">
 
+     </div>
 
-        </div>
+     <div className="col"> 
+     <div >
+      <p>code client</p>
+      </div> <br></br>
    
-     </div>   
+      
+     </div>
 
+     <div className="col"> 
+     <div >
+     <input type="text" id="form1Example1" className="form-control" value={this.state.codeClientdest} name="codeClientdest" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
+
+      </div> 
+   
+      
+     </div>
+
+     <div className="col"> 
+     <button type="button" class="btn btn-dark" onClick={() => this.setState({ show: true })}>parcourir</button>
+
+     <div >
+
+      </div> 
+   
+      
      </div>
      </div>
 
@@ -283,7 +309,7 @@ testget(idclt){
   </div>
   <div className="col">
 
-    <input type="text" id="form1Example2" className="form-control" name="addressRecepteur" onChange={this.onChange}/><br></br>
+    <input type="text" id="form1Example2" className="form-control" name="montant" onChange={this.onChange}/><br></br>
     <select name="modePayement"  className="form-control" >
    <option defaultChecked  >espece</option>  
    <option >facture</option> 

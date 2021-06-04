@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Modal from 'react-modal';
+
 import { useHistory, useParams } from "react-router-dom";
 
 const Coliseditdash = () => {
   let history = useHistory();
   const { id } = useParams();
+
   const [colis, setColis] = useState({
           refCoulis : '',
           nonEmeteur :'',
@@ -35,6 +38,11 @@ const Coliseditdash = () => {
   };
   return (
     <div className="content-wrapper">
+
+
+
+
+
     {/* Content Header (Page header) */}
     <div className="content-header">
       <div className="container-fluid">

@@ -3,7 +3,8 @@ import Header from "./Header";
 import Menu from "./Menu";
 import CouliService from '../services/CouliService'
 import { Link } from "react-router-dom";
-
+//import Modal from 'react-modal';
+import Modal from './Modal'
 export class ColisListRender extends Component{
 
     constructor(props) {
@@ -25,8 +26,8 @@ export class ColisListRender extends Component{
                 montant : 0 ,
                 searchTitle: "" ,
                 colislist: [],
-                searchref : ''
-
+                searchref : '' , 
+                show : false
            
         
         }
@@ -41,26 +42,9 @@ export class ColisListRender extends Component{
             this.setState({ colis: res.data});
         });
     }
-onChangeSearchTitle(e) {
-    const searchTitle = e.target.value; 
-    this.setState({
-      searchTitle: searchTitle
-    });
-  }
 
 
-  searchTitle() {
-    CouliService.getCoulisByReference(this.state.searchTitle)
-      .then(response => {
-        this.setState({
-          colislist: response.data
-        });
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
+  
 
 
 
@@ -134,6 +118,12 @@ onChangeSearchTitle(e) {
         return(
           
             <div className="content-wrapper">
+        
+        <Modal className="modal-wrapper" show={this.state.show} >
+        
+
+
+        </Modal>
             {/* Content Header (Page header) */}
 
 <br></br>
@@ -254,10 +244,11 @@ onChangeSearchTitle(e) {
                                              
                                              <td>
                                              <Link to={`/colis/edit/${coli.idCoulis}`}>
-                                       <button type="button" class="btn btn-outline-primary mr-2">
+              
+                                       <button type="button" class="btn btn-outline-primary mr-2" >
                                                     Update
                                 </button>
-                                           </Link>
+                                </Link>
 
                                              </td>
                                              <td>
