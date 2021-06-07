@@ -8,6 +8,7 @@ import couliService from '../services/CouliService'
 import Modal from 'react-modal';
 import ClientService from '../services/ClientService'
 import './Dashboard2.css'
+
 export class Dashboard2 extends Component {  
 
 
@@ -24,6 +25,7 @@ export class Dashboard2 extends Component {
       addressRecepteur:'',
       numtelRecepteur: 0,
       bureau : '',
+      bureaudest : '',
       numReçu :0 ,
       nonChauffeur:'',
       matrCamion:'',
@@ -32,14 +34,17 @@ export class Dashboard2 extends Component {
       montantRemboursement :'',
       montant : '',
       show : false ,
+      showsearch : false ,
       message : null,
       clients: [],
       codevalue: 0 ,
       codeClientexped : 0,
       numtelRecepteur : 0 ,
       codeClientdest  : 0,
+      existrembours :'' ,
+   
       bureaux :[]
-      
+       
 
     }
     this.saveCoulis = this.saveCoulis.bind(this);
@@ -51,16 +56,19 @@ export class Dashboard2 extends Component {
 componentDidMount(){
   ClientService.allClient().then((res) => {
       this.setState({ clients: res.data});
+      console.log(this.state.clients)
   });
   ClientService.getallBureau().then((res)=>{
        this.setState({bureaux : res.data})
 
+       for(let i in this.state.bureaux){
+     console.log(this.state.bureaux)}
   })
 }
 saveCoulis =(e) =>{
   e.preventDefault();
   let coulis  = {refCoulis : this.state.refCoulis, nonEmeteur : this.state.nonEmeteur ,  numtelEmeteur : this.state.numtelEmeteur , nonRecepteur : this.state.nonRecepteur , numtelRecepteur : this.state.numtelRecepteur,
-    codeClientexped :this.state.codeClientexped , bureau : this.state.bureau, modePayement : this.state.modePayement, remboursement : this.state.remboursement ,montantRemboursement: this.state.montantRemboursement, montant : this.state.montant ,codeClientdest :this.state.codeClientdest
+    codeClientexped :this.state.codeClientexped , bureaudest : this.state.bureaudest, bureau : this.state.bureau , modePayement : this.state.modePayement, remboursement : this.state.remboursement ,montantRemboursement: this.state.montantRemboursement, montant : this.state.montant ,codeClientdest :this.state.codeClientdest , existrembours : this.state.existrembours
     } ; 
     couliService.addCoulis(coulis).then(res => {
       this.setState({message : "coulis added with Seccesful"});
@@ -69,6 +77,9 @@ saveCoulis =(e) =>{
 
    
   }
+
+
+
 
   onChange = (e) =>
   this.setState({ [e.target.name]: e.target.value });
@@ -83,15 +94,26 @@ showModal = () => {
 hideModal = () => {
   this.setState({ show: false });
 };
-testget(idclt){
+testgetdest(idclt){
  return ClientService.getcodeClien(idclt).then(res=>{
-   this.setState({codevalue : res.data})
+   this.setState({codeClientdest : res.data})
    console.log(res)
  }
 
  )
 
 }
+
+testgetexped(idclt){
+  return ClientService.getcodeClien(idclt).then(res=>{
+    this.setState({codeClientexped : res.data})
+    this.setState({ show: false })
+    console.log(res)
+  }
+ 
+  )
+ 
+ }
     render() {  
         return (  
        <div className="content-wrapper">
@@ -127,13 +149,12 @@ testget(idclt){
    <td>{client.codeClient} </td>
    <td>{client.nomPrenpm} </td>
    <td>{client.matriculFiscale} </td>
-   <td><button type="button" class="btn btn-info" onClick={() => this.testget(client.codeClient)}>Ajouter</button>
+   <td><button type="button" class="btn btn-info" onClick={() => this.testgetexped(client.codeClient)}>Ajouter</button>
 </td>
     </tr>
          ) } </tbody></table>
 
          <br></br>
-         <button type="button" class="btn btn-dark" style={{marginLeft:"40%"}} onClick={() => this.setState({ show: false })}>Fermer</button>
 
            </div>
 
@@ -142,6 +163,10 @@ testget(idclt){
 
         </Modal>
   {/* Content Header (Page header) */}
+
+    {/* Modal 2 */}
+   
+    
   <div className="content-header">
     <div className="container-fluid">
       <div className="row mb-2">
@@ -179,11 +204,13 @@ testget(idclt){
   {/* Email input */}
   <div className="form-row mb-4">
   <div className="col">
-  <p className="form-label" htmlFor="form1Example1" >Réference</p>
+  <p className="form-label" htmlFor="form1Example1" >Réference</p><br></br>
+  <p className="form-label" htmlFor="form1Example1" >bureau</p>
 
   </div>
   <div className="col">
-  <input type="text" id="form1Example1" className="form-control"  name="refCoulis" style={{ width: "150px"}} onChange={this.onChange} />
+  <input type="text" id="form1Example1" className="form-control"  name="refCoulis" style={{ width: "150px"}} onChange={this.onChange} /><br></br>
+  <input type="text" id="form1Example1" className="form-control"  name="bureau" style={{ width: "150px"}} onChange={this.onChange} />
 
   </div>
   <div className="col">
@@ -198,13 +225,13 @@ testget(idclt){
      <div className="form-row mb-4">
      <div className="col"> 
      <div >
-        <input   type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+        <input   type="radio" name="flexRadioDefault" name="clintfidel" id="flexRadioDefault1" />
         <label  >
           Client fidel
         </label>
       </div> <br></br><br></br>
       <div >
-        <input   type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+        <input   type="radio" name="flexRadioDefault" name="clientpassage"  id="flexRadioDefault1" />
         <label >
           <p>Client passagé</p> 
         </label>
@@ -219,7 +246,7 @@ testget(idclt){
         </div>
      
         <div className="col">
-        <input type="text" id="form1Example1" className="form-control" value={this.state.codeClientexped} name="codeClient" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
+        <input type="text" id="form1Example1" className="form-control" value={this.state.codeClientexped} name="codeClientexped" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
         <input type="text" id="form1Example1" className="form-control" name="nonEmeteur" style={{ width: "80px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
         <input type="text" id="form1Example1" className="form-control" name="numtelEmeteur"  style={{ width: "80px"} ,{ height: "30px"}} onChange={this.onChange} />
 
@@ -256,15 +283,18 @@ testget(idclt){
      </div>
      <div className="col">
   
- 
-     <input type="text" id="form1Example1" className="form-control" name="nonRecepteur " style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} />
+
+     <input type="text" id="form1Example1" className="form-control" name="nonRecepteur " style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
       <br></br>
              <input type="text" id="form1Example1" className="form-control" name="numtelRecepteur" style={{ width: "100px"} ,{ height: "30px"}} onChange={this.onChange} /><br></br>
 
-             <select name="bureau"  className="form-control" >
-   <option defaultChecked  >{this.state.bureaux}</option>  
-   <option ></option> 
-   <option  > </option> </select>
+             <select name="bureaudest" name="bureaudest" onChange={this.onChange} className="form-control" >
+              <option>Sousse</option>
+              <option>Mednine</option>
+              <option>Gabes</option>
+              <option>Djerba</option>
+              <option>Sfax</option>
+             </select>
      
 
      </div>
@@ -310,9 +340,9 @@ testget(idclt){
   <div className="col">
 
     <input type="text" id="form1Example2" className="form-control" name="montant" onChange={this.onChange}/><br></br>
-    <select name="modePayement"  className="form-control" >
-   <option defaultChecked  >espece</option>  
-   <option >facture</option> 
+    <select name="modePayement" onChange={this.onChange}  className="form-control" >
+    <option >espece</option> 
+   <option >facture</option>  
    <option  >en attente </option> </select>
   </div>
   <div className="col">

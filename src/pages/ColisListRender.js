@@ -5,17 +5,25 @@ import CouliService from '../services/CouliService'
 import { Link } from "react-router-dom";
 //import Modal from 'react-modal';
 import Modal from './Modal'
+
+
 export class ColisListRender extends Component{
 
     constructor(props) {
         super(props)
 
         this.state = {
+                 coulis:{
+                  refCoulis : 0 ,
+                  nonEmeteur :''
+    
+                 },
+
                 colis: [],
                 searchTitle: "",
                 message : null ,
         
-                refCoulis : '',
+                refCoulis : 0,
                 nonEmeteur :'',
                 addressEmeteur:'',
                 numtelEmeteur:0,
@@ -27,7 +35,10 @@ export class ColisListRender extends Component{
                 searchTitle: "" ,
                 colislist: [],
                 searchref : '' , 
-                show : false
+                show : false, 
+                shosearch : false ,
+                colisref :[],
+                client : null 
            
         
         }
@@ -36,18 +47,27 @@ export class ColisListRender extends Component{
     }
 
      bureau = "tunis"
-
+    
     componentDidMount(){
         CouliService.allcolis(this.bureau).then((res) => {
             this.setState({ colis: res.data});
         });
+  
     }
 
 
   
 
 
+    findcols(idcols){
+      CouliService.getcolsref(idcols).then((res)=>{
+        this.setState({coulis : res.data})
+        console.log(this.state.coulis)
+        this.setState({showsearch : true})
+      })
 
+
+    }
   
 
     refrechColis(){
@@ -104,7 +124,9 @@ export class ColisListRender extends Component{
     }
 
   
-
+    hideModal = () => {
+      this.setState({ shosearch: false });
+    };
 
     findcolis(refcolis){
       CouliService.getCoulisByReference(refcolis).then(res=>{
@@ -119,11 +141,54 @@ export class ColisListRender extends Component{
           
             <div className="content-wrapper">
         
-        <Modal className="modal-wrapper" show={this.state.show} >
-        
+            
 
 
-        </Modal>
+        <Modal  className="modal-wrapper"  isOpen={this.state.showsearch} handleClose={this.hideModal} style={{width:"20%"}}>
+         
+       
+
+         <div className="modal-header">
+           <p>Liste de client</p>
+         </div>
+         <div className="modal-body">
+           <p>References de clients</p>
+           <table className = "table table-striped table-bordered">
+
+<thead>
+<tr >
+
+      <th> Réference</th>
+
+      <th> Bureau</th>
+
+      <th></th>
+  
+ 
+  </tr>
+</thead>
+<tbody>
+  {
+      this.state.colisref.map(
+          colis => 
+          <tr key = {colis.refCoulis}>
+
+ <td>{colis.nonEmeteur} </td>
+ <td>{colis.refCoulis} </td>
+
+
+  </tr>
+       ) } </tbody></table>
+
+       <br></br>
+    <button type="button" class="btn btn-info" >Ajouter</button>
+
+         </div>
+
+
+
+
+      </Modal>
             {/* Content Header (Page header) */}
 
 <br></br>
@@ -133,11 +198,11 @@ export class ColisListRender extends Component{
 <form class="form-inline ml-3">
       <div class="input-group input-group-sm">
       <label >Reference </label>
-<input className="form-control form-control-navbar" type="search"  name="searchref"
-                placeholder="Search" aria-label="Search" onChange={this.onChange} onClick={this.findcolis(this.state.searchref)} />
+<input className="form-control form-control-navbar" type="text"  name="searchref"
+                placeholder="Search" aria-label="Search" onChange={this.onChange}  />
         <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit" >
-            <i class="fas fa-search"></i>
+          <button class="btn btn-navbar" type="submit"  onClick={this.findcols(this.state.searchref)}>
+            <i class="fas fa-search" ></i>
           </button>
         </div>
       </div>
@@ -199,7 +264,8 @@ export class ColisListRender extends Component{
                             <tr >
                              
                                     <th> Réference</th>
-                                
+                                    <th> Expediteur</th>
+                                    <th> Destinateur</th>
                                     <th> Statut reception</th>
                                     <th> Statut Livraison</th>
                                     <th> Statut Remboursement</th>
@@ -210,9 +276,30 @@ export class ColisListRender extends Component{
                                 {
                                     this.state.colis.map(
                                         coli => 
-                                        <tr key = {coli.idCoulis}>
-
+                                        <tr key = {coli.refCoulis}>
+                                     
                                <td>{coli.refCoulis} </td> 
+
+
+                              {coli.codeClientexped === 0 ? (
+    <td>Nom : {coli.nonEmeteur}  <br></br> Tel :  {coli.numtelEmeteur} </td>  
+  ) : (
+    <td> {coli.codeClientexped}  </td>  
+  )}  
+                                    {coli.codeClientdest === 0 ? (
+    <td>Nom : {coli.nonRecepteur}  <br></br> Tel :  {coli.numtelRecepteur} </td>  
+  ) : (
+    <td> {coli.codeClientdest}  </td>  
+  )}  
+      
+
+   
+
+
+
+  
+
+  
 
                                             {coli.statuReception === "enattente" ? (
     <td>  <button className="btn btn-danger"  >
@@ -223,7 +310,7 @@ export class ColisListRender extends Component{
   )}  
                                             
                                          
-                                            {coli.modePayement === "Facture" ? (
+                                            {coli.modePayement === "espece" ? (
     <td>  <button className="btn btn-success"  >
 </button> Confirmé  </td>  
   ) : (
@@ -243,7 +330,7 @@ export class ColisListRender extends Component{
                            
                                              
                                              <td>
-                                             <Link to={`/colis/edit/${coli.idCoulis}`}>
+                                             <Link to={`/colis/edit/${coli.refCoulis}`}>
               
                                        <button type="button" class="btn btn-outline-primary mr-2" >
                                                     Update
@@ -252,7 +339,7 @@ export class ColisListRender extends Component{
 
                                              </td>
                                              <td>
-                                                 <button style={{marginLeft: "10px"}}   className="btn btn-danger" onClick={() => this.deleteColis(coli.idCoulis)}>Delete </button>
+                                                 <button style={{marginLeft: "10px"}}   className="btn btn-danger" onClick={() => this.deleteColis(coli.refCoulis)}>Delete </button>
                                              </td>
                                          
                                         </tr>

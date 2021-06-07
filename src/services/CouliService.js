@@ -39,6 +39,18 @@ class CouliService {
 
         return axios.get("http://localhost:8080/auth/getcouls" + "/" + refcoulis)
     }
+
+    
+    getClientByCode(codeclt){
+
+        return axios.get("http://localhost:8080/auth/onclient" + "/" + codeclt)
+    }
+
+
+    getcolsref(codeclt){
+        return axios.get("http://localhost:8080/auth/findcols" + "/" + codeclt)
+
+    }
 }
 
 export default new CouliService

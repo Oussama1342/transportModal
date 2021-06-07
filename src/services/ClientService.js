@@ -21,6 +21,8 @@ class ClientService {
             return axios.get("http://localhost:8080/auth/allbureau")
 
         }
+
+        g
         updateClient(idclient){
 
             return  axios.put("localhost:8080/auth/editclient" + "/" + idclient , {
