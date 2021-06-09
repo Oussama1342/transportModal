@@ -48,7 +48,7 @@ class CouliService {
 
 
     getcolsref(codeclt){
-        return axios.get("http://localhost:8080/auth/findcols" + "/" + codeclt)
+        return axios.get("http://localhost:8080/auth/findcolis" + "/" + codeclt)
 
     }
 }

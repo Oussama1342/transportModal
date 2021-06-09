@@ -25,6 +25,8 @@ import client from './pages/Client'
  import ClientList from './pages/Client/ClientList'
 import ClientEdit from './pages/Client/ClientEdit'
 import BourdorLivraison from './pages/BourdorLivraison'
+import Searchcolis from './pages/searchfolder/Searchcolis'
+
 import test from './pages/test'
 import Modal from './pages/Modal'
 
@@ -56,6 +58,7 @@ function App() {
          <Route path = "/listclient" exact component = {ClientList}></Route>
          <Route path = "/editClient/:id" exact component = {ClientEdit}></Route>
          <Route path = "/test" exact component = {test}></Route>
+         <Route path = "/search/:id" exact component = {Searchcolis}></Route>
          <Route path = "/editcolis/:id" exact component = {Modal}></Route>
 
           <Route path = "/" exact component = {home}></Route> 

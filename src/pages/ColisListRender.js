@@ -13,11 +13,7 @@ export class ColisListRender extends Component{
         super(props)
 
         this.state = {
-                 coulis:{
-                  refCoulis : 0 ,
-                  nonEmeteur :''
-    
-                 },
+                 coulis: null ,
 
                 colis: [],
                 searchTitle: "",
@@ -38,8 +34,8 @@ export class ColisListRender extends Component{
                 show : false, 
                 shosearch : false ,
                 colisref :[],
-                client : null 
-           
+                client : null,
+                colissearch : []
         
         }
 
@@ -60,11 +56,17 @@ export class ColisListRender extends Component{
 
 
     findcols(idcols){
+      
       CouliService.getcolsref(idcols).then((res)=>{
-        this.setState({coulis : res.data})
-        console.log(this.state.coulis)
-        this.setState({showsearch : true})
+       /// this.setState({coulis : res.data})
+      // this.state.colis.push(res.data)
+      console.log(this.state.colis)
+
+        //console.log(this.state.colissearch[this.state.colissearch.length - 1])
+       // this.setState({showsearch : true})
       })
+
+    // this.setState({showsearch : true})
 
 
     }
@@ -169,12 +171,12 @@ export class ColisListRender extends Component{
 </thead>
 <tbody>
   {
-      this.state.colisref.map(
-          colis => 
-          <tr key = {colis.refCoulis}>
+      this.state.colissearch.map(
+          colisearch => 
+          <tr key = {colisearch.refCoulis}>
 
- <td>{colis.nonEmeteur} </td>
- <td>{colis.refCoulis} </td>
+ <td>{colisearch.nonEmeteur} </td>
+ <td>{colisearch.refCoulis} </td>
 
 
   </tr>
@@ -198,12 +200,14 @@ export class ColisListRender extends Component{
 <form class="form-inline ml-3">
       <div class="input-group input-group-sm">
       <label >Reference </label>
-<input className="form-control form-control-navbar" type="text"  name="searchref"
+<input className="form-control form-control-navbar" type="text" value={this.state.searchref}  name="searchref"
                 placeholder="Search" aria-label="Search" onChange={this.onChange}  />
         <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit"  onClick={this.findcols(this.state.searchref)}>
-            <i class="fas fa-search" ></i>
+        <Link to={`/search/${this.state.searchref}`}>
+          <button class="btn btn-navbar" type="submit" >
+          <i class="fas fa-search"></i>
           </button>
+          </Link>
         </div>
       </div>
     </form>
@@ -212,7 +216,7 @@ export class ColisListRender extends Component{
     <form class="form-inline ml-3">
       <div class="input-group input-group-sm">
   
-      <label >Date </label>
+      <label >Jour </label>
 <input className="form-control form-control-navbar" type="date" placeholder="Search" name="searchdate"  aria-label="Search" />
         <div class="input-group-append">
           <button class="btn btn-navbar" type="submit">
@@ -221,6 +225,7 @@ export class ColisListRender extends Component{
         </div>
       </div>
     </form>
+
     </div>
   
  </div>
@@ -236,8 +241,8 @@ export class ColisListRender extends Component{
             </div>
             {/* /.content-header */}
             {/* Main content */}
-            <section style={{ width: '1800px'}}>
-              <div className="container-fluid">
+            <section style={{ width: '1400px'}}>
+                            <div className="container-fluid">
                 {/* Small boxes (Stat box) */}
               
                 {/* /.row */}
