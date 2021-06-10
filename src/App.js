@@ -26,7 +26,6 @@ import client from './pages/Client'
 import ClientEdit from './pages/Client/ClientEdit'
 import BourdorLivraison from './pages/BourdorLivraison'
 import Searchcolis from './pages/searchfolder/Searchcolis'
-
 import test from './pages/test'
 import Modal from './pages/Modal'
 

@@ -9,9 +9,9 @@ addLivraison(livraison){
 }
 
 
-addlivraisoncolis(livraison, refcls){
+addlivraisoncolis(livraison){
 
-  return axios.post("http://localhost:8080/auth/addlivraison" + "/" + refcls , livraison)
+  return axios.post("http://localhost:8080/auth/addlivraison"  , livraison)
 }
 
 
